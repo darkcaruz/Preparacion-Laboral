@@ -47,3 +47,24 @@ const puzzles=[
 ['experto','Cuatro tareas A, B, C y D. A precede a C, D precede a B y C precede a D. ¿Cuál es el orden?',['A, C, D, B','D, A, B, C','A, D, C, B','C, A, D, B'],'Las restricciones forman una cadena A → C → D → B.'],
 ['experto','Si exactamente una de P y Q es verdadera y Q implica R, con R falso, ¿qué debe ser verdadero?',['P','Q','R','P y Q'],'R falso implica Q falso; entonces P debe ser verdadero.']
 ];puzzles.filter(p=>!p[1].startsWith('Identifica')).forEach(p=>logic(...p));
+
+export const skills={visual:'Razonamiento visual',atencion:'Atención y concentración',matematica:'Agilidad matemática',verbal:'Razonamiento verbal',fiscalizacion:'Fiscalización y cumplimiento'};
+function skillAdd(skill,m,text,options,explanation){add(m,text,options.map(String),0,explanation);bank.at(-1).skill=skill;bank.at(-1).level='intermedio'}
+for(let i=1;i<=60;i++){
+ const a=i+3,b=i%7+2;
+ const symbols=['▲','●','■','◆','★','○','□'];const x=symbols[i%7],y=symbols[(i+1)%7],z=symbols[(i+2)%7],w=symbols[(i+3)%7];
+ skillAdd('visual',0,`Completa el patrón: ${x} ${y} ${y} ${x} ${y} ${y} ${x} ?`,[y,x,z,w],'Se repite un bloque de tres símbolos.');
+ const code=String(123456+i*137);
+ skillAdd('atencion',1,`Identifica la copia exacta: F-${code}-${b}`,[`F-${code}-${b}`,`F-${Number(code)+1}-${b}`,`F-${code}-${b+1}`,`E-${code}-${b}`],'Compara prefijo, número y sufijo.');
+ skillAdd('matematica',0,`Calcula mentalmente: ${a*b} ÷ ${b} + ${i}`,[a+i,a+i+1,a+i+3,a+i-1],'Primero divide, después suma.');
+ skillAdd('matematica',0,`Se procesan ${a} expedientes por hora durante ${b} horas y se devuelven ${i}. ¿Cuántos quedan procesados sin devolución?`,[a*b-i,a*b,a*b+i,a*b-i+1],'Multiplica la tasa por las horas y resta las devoluciones.');
+ skillAdd('verbal',0,`Todos los registros del grupo ${i} están validados. El registro X pertenece al grupo ${i}. ¿Qué se deduce?`,['X está validado','X está archivado','X tiene errores','X pertenece a otro grupo'],'La regla universal se aplica al miembro del grupo.');
+}
+const fiscal=[
+['Un expediente contiene datos personales innecesarios para el informe público. ¿Qué procede?',['Excluir los datos innecesarios conforme al procedimiento','Publicar todo','Eliminar el expediente','Enviar a terceros'],'Minimización de datos y confidencialidad.'],
+['Una instrucción verbal contradice un control obligatorio. ¿Qué procede?',['Solicitar aclaración y escalar por el canal formal','Omitir el control','Modificar la evidencia','Cerrar sin registro'],'Respeta los controles y conserva trazabilidad.'],
+['Dos solicitudes tienen igual plazo, pero una presenta riesgo urgente documentado. ¿Qué hacer?',['Aplicar criterios objetivos de priorización y registrar la decisión','Elegir por amistad','Ignorar ambas','Cambiar las fechas'],'Priorizar según criterios autorizados.'],
+['Un familiar figura en un expediente asignado. ¿Qué hacer?',['Declarar el conflicto y seguir el procedimiento de abstención aplicable','Revisarlo en secreto','Favorecerlo','Eliminarlo'],'Evita conflictos de interés.'],
+['Un informe contiene una conclusión sin respaldo documental. ¿Qué hacer?',['Solicitar evidencia antes de validar','Aprobar por confianza','Inventar respaldo','Ocultar la conclusión'],'La conclusión debe ser verificable.']
+];fiscal.forEach(p=>skillAdd('fiscalizacion',2,...p));
+bank.filter(q=>q.m===2&&!q.skill).forEach(q=>q.skill='fiscalizacion');
