@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    container_name: preparacion-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:2222:3000"
+    environment:
+      PGHOST: db
+      PGDATABASE: preparacion_laboral
+      PGUSER: preparacion
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      PORT: "3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 256m
+  db:
+    image: postgres:17-alpine
+    container_name: preparacion-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: preparacion_laboral
+      POSTGRES_USER: preparacion
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U preparacion -d preparacion_laboral"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    mem_limit: 384m
+volumes:
+  dbdata:
