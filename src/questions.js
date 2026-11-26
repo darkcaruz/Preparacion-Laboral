@@ -11,3 +11,39 @@ add(1,'¿Qué fórmula cuenta las celdas que cumplen un criterio en Excel?',['CO
 add(1,'¿Qué herramienta de Excel muestra solo filas que cumplen una condición?',['Filtro','Combinar celdas','Zoom','Vista de página'],0,'El filtro permite restringir temporalmente las filas visibles.');
 add(1,'¿Qué función calcula la media de un rango numérico?',['PROMEDIO','CONTAR','MAX','CONCAT'],0,'PROMEDIO devuelve la media aritmética.');
 add(1,'¿Cómo identificar rápidamente valores repetidos en Excel?',['Formato condicional de duplicados','Cambiar la fuente','Aumentar zoom','Imprimir sin títulos'],0,'El formato condicional ayuda a localizar duplicados.');
+
+ // Nuevos ejercicios originales. Los identificadores anteriores permanecen intactos.
+export const levels={basico:'Básico',intermedio:'Intermedio',avanzado:'Avanzado',experto:'Experto'};
+bank.filter(q=>q.m===0).forEach(q=>q.level='basico');
+function logic(level,text,options,explanation){add(0,text,options.map(String),0,explanation);bank.at(-1).level=level}
+function numLogic(level,text,n,wrong,explanation){logic(level,text,[n,...wrong],explanation)}
+for(let i=1;i<=12;i++){
+ const a=i+2,b=i%4+2;
+ numLogic('basico',`Serie: ${a}, ${a*b}, ${a*b*b}, ¿qué sigue?`,a*b**3,[a*b*b+b,a*b**3+b,a*b**3-b],`Multiplica cada término por ${b}.`);
+ const seq=[a,a+2,a+6,a+12,a+20];
+ numLogic('intermedio',`Serie: ${seq.join(', ')}, ¿qué sigue?`,a+30,[a+28,a+32,a+40],'Las diferencias son 2, 4, 6, 8 y 10.');
+ const n=100+20*i;
+ numLogic('intermedio',`Un valor de ${n} aumenta 20% y luego disminuye 25%. ¿Cuál es el resultado?`,n*.9,[n*.95,n,n*1.05].map(v=>Math.round(v)), 'Multiplica por 1,20 y luego por 0,75: queda el 90%.');
+ const s=[a,a*2,a*2+3,(a*2+3)*2,(a*2+3)*2+3],next=s[4]*2;
+ numLogic('avanzado',`Serie alternada: ${s.join(', ')}, ¿qué sigue?`,next,[s[4]+3,next+3,next-3],'Alterna multiplicar por 2 y sumar 3.');
+ const total=60+12*i;
+ numLogic('avanzado',`De ${total} expedientes, un tercio se revisa el lunes y la mitad de los restantes el martes. ¿Cuántos quedan?`,total/3,[total/6,total/2,total*2/3],'Quedan dos tercios tras el lunes y la mitad de estos tras el martes.');
+ const k=i+4;
+ numLogic('experto',`Dos equipos revisan un lote en ${k} y ${2*k} horas respectivamente. ¿Cuántas horas tardan juntos? (Las fracciones pueden estar sin simplificar.)`,String(2*k)+'/3',[String(k)+'/3',String(3*k)+'/2',String(k)],'Sus tasas suman 3/(2k); el tiempo es 2k/3 horas.');
+ const p=20+i;
+ numLogic('experto',`El ${p}% de los registros tiene error A, el 50% error B y el 10% ambos. ¿Qué porcentaje no tiene ninguno?`,60-p,[50-p,70-p,80-p],`Inclusión-exclusión: ${p} + 50 − 10; resta el resultado a 100.`);
+}
+const puzzles=[
+['basico','Analogía: archivo es a documento como biblioteca es a…',['Libro','Mesa','Lápiz','Puerta'],'Relación de contenedor o colección con su contenido.'],
+['basico','Patrón: ▲ ● ▲ ● ▲ ¿qué sigue?',['●','▲','■','◆'],'Alternan triángulo y círculo.'],
+['intermedio','Una flecha apunta al norte. Gira 90° a la derecha y luego 180°. ¿Hacia dónde apunta?',['Oeste','Este','Norte','Sur'],'Norte → este → oeste.'],
+['intermedio','Todos los A son B. Ningún B es C. ¿Qué conclusión es necesaria?',['Ningún A es C','Todos los C son A','Algún A es C','Todos los B son A'],'A está contenido en B, que no intersecta C.'],
+['intermedio','Identifica el código diferente.',['AB-8041-XZ','AB-8401-XZ','AB-8401-XZ ','AB-8401-XZ  '],'Ignorando espacios finales, el primer código invierte dos dígitos.'],
+['avanzado','Ana llegó antes que Bruno. Carla llegó después de Bruno y antes que Diego. ¿Quién llegó tercero?',['Carla','Ana','Bruno','Diego'],'El orden es Ana, Bruno, Carla, Diego.'],
+['avanzado','Patrón: ↑ → ↓ ← ↑ → ¿qué sigue?',['↓','↑','←','→'],'Rotación de 90° en sentido horario.'],
+['avanzado','Si P implica Q y Q implica R, pero R es falso, ¿qué se concluye?',['P y Q son falsos','P es verdadero','Q es verdadero','No se puede deducir nada'],'Por modus tollens, R falso implica Q falso y luego P falso.'],
+['avanzado','En una fila de 7 personas, Laura es tercera desde la izquierda. ¿Qué posición ocupa desde la derecha?',['Quinta','Cuarta','Tercera','Sexta'],'7 − 3 + 1 = 5.'],
+['experto','Tres cajas A, B y C contienen una sola llave en total. A dice «está en B», B dice «no está en B», C dice «no está en A». Solo una afirmación es verdadera. ¿Dónde está?',['A','B','C','No se puede determinar'],'A y B son contradictorias: una siempre es verdadera. C debe ser falsa, por lo tanto la llave está en A.'],
+['experto','Cuatro tareas A, B, C y D. A precede a C, D precede a B y C precede a D. ¿Cuál es el orden?',['A, C, D, B','D, A, B, C','A, D, C, B','C, A, D, B'],'Las restricciones forman una cadena A → C → D → B.'],
+['experto','Si exactamente una de P y Q es verdadera y Q implica R, con R falso, ¿qué debe ser verdadero?',['P','Q','R','P y Q'],'R falso implica Q falso; entonces P debe ser verdadero.']
+];puzzles.filter(p=>!p[1].startsWith('Identifica')).forEach(p=>logic(...p));
